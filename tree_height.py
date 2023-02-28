@@ -1,30 +1,34 @@
-class Node:
-    def _init_(self, val):
-        self.val = val
-        self.berni = [] 
+import sys
+import threading
+import numpy as np
 
 
-def musu_koks(n, vecaki) :
-    nodes = [Node(i) for i in range(n)]
-    sakne = None
-    for i, p in  enumerate(vecaki):
-        if p == -1:
-            sakne = nodes[i]
+def compute_height(n, parents) : 
+    tree = [[] for _ in range(n)]
+    for i in range(n):
+        if parents[i] == -1:
+            root = i 
         else:
-            nodes[p].berni.append(nodes[i])
-    return sakne
-    
+            tree[parents[i]].append(i)
 
-def dzilums(sakne):
-    if sakne  is None :
-        return 0
-    dzil = 1
-    for mazie in sakne.berni:
-        dzil =  max(dzil, 1 + dzilums(mazie))
-    return dzil 
-    
+    heights = [-1] *  n
+    def compute_height_recursive(node):
+        if not tree[node]:
+            heights[node] = 0
+            return 0
+        max_child_height = max([compute_height_recursive(child) for  child in tree[node]])
+        heights[node] =  max_child_height + 1
+        return heights[node]
 
-n = int(input())
-vecaki = list(map(int, input().split()))
-sakne = musu_koks(n, vecaki) 
-print(dzilums(sakne))
+    compute_height_recursive(root)
+    return max(heights) +  1
+
+
+def main():
+    n = int(input())
+    parents = np.fromstring(input(), dtype=int, sep=' ')
+    print(compute_height(n, parents)) 
+
+sys.setrecursionlimit(10**7)
+threading.stack_size(2**27)
+threading.Thread(target=main).start()
