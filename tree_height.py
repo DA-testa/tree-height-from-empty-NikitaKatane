@@ -3,25 +3,22 @@ import threading
 import numpy as np
 
 
-def compute_height(n, parents) : 
+def compute_height(n, parents):
     tree = [[] for _ in range(n)]
+    root = None
     for i in range(n):
         if parents[i] == -1:
-            root = i 
+            root = i
         else:
             tree[parents[i]].append(i)
 
-    heights = [-1] *  n
     def compute_height_recursive(node):
         if not tree[node]:
-            heights[node] = 0
             return 0
-        max_child_height = max([compute_height_recursive(child) for  child in tree[node]])
-        heights[node] =  max_child_height + 1
-        return heights[node]
+        max_child_height = max([compute_height_recursive(child) for child in tree[node]])
+        return max_child_height + 1
 
-    compute_height_recursive(root)
-    return max(heights) +  1
+    return compute_height_recursive(root)
 
 
 def main():
