@@ -22,8 +22,8 @@ def compute_height(n, parents):
 
 
 def main():
-    n = int(input())
-    parents = np.fromstring(input(), dtype=int, sep=' ')
+    n = int(input().strip())
+    parents = np.fromstring(input().strip(), dtype=int, sep=' ')
     print(compute_height(n, parents)) 
 
 sys.setrecursionlimit(10**7)
