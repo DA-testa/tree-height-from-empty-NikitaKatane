@@ -26,7 +26,7 @@ def main():
     text = input("Enter I or F: ")
     if "F" in text:
         filename = input()
-        file_path = f"./text/{filename}"
+        file_path = f'./text/' + filename
         if "a" not in filename:
             try:
                 with open(file_path) as f:
