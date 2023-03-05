@@ -3,14 +3,14 @@ import threading
 import numpy
 
 
-def compute_height(n, parents) : 
-    Root = None
+def compute_height(n, vecaki) : 
+    sakne = None
     position =[[]for_in range(n)]
     for i in range(n):
-        if parents[i] == -1
-        root = i
+        if vecaki[i] == -1:
+        sakne = i
         else:
-            position[parents[i]].append(i)
+            position[vecaki[i]].append(i)
 
 
 
@@ -18,9 +18,9 @@ def max_height(b):
     if not position[b]:
         return 1
         else:
-            max_child_height = max(max_height(children) for children in position[b])
+            max_child_height = max(max_height(berni) for berni in position[b])
             return max_child_height + 1
-return max_height(root)
+return max_height(sakne)
 
         
 
@@ -34,7 +34,7 @@ def main():
             try:
                 with open(file_path) as f:
                     n =int(f.readline())
-                    parents = list(map(int, f.readline().split()))
+                    vecaki = list(map(int, f.readline().split()))
             except Exception as e:
                 print("Error:",str(e))
                 return
@@ -43,7 +43,7 @@ def main():
             return
     elif "I" in text:
         n = int(input())
-        parents = list(map(int,input().split()))
+        vecaki = list(map(int,input().split()))
 
   
 
