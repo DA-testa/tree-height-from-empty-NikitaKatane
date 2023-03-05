@@ -1,30 +1,41 @@
 import sys
 import threading
-import numpy
 
 
-def compute_height(n, parents):
-    root = -1
-    position = [[] for _ in range(n)]
-    for i in range(n):
-        if parents[i] == -1:
-            root = i
-        else:
-            position[parents[i]].append(i)
-    return root, position
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.children = []
 
 
-def max_height(root, position):
-    if not position[root]:
-        return 1
-    else:
-        max_child_height = max(max_height(children, position) for children in position[root])
-        return max_child_height + 1
+class Tree:
+    def __init__(self, n, parents):
+        self.nodes = [Node(i) for i in range(n)]
+        for i in range(n):
+            parent = parents[i]
+            if parent == -1:
+                self.root = self.nodes[i]
+            else:
+                self.nodes[parent].children.append(self.nodes[i])
+
+    def max_height(self):
+        def dfs(node):
+            if not node.children:
+                return 1
+            else:
+                max_child_height = max(dfs(child) for child in node.children)
+                return max_child_height + 1
+
+        return dfs(self.root)
 
 
 def main():
     text = input("Enter I or F: ")
-    if "F" in text:
+    if text == "I":
+        n = int(input())
+        parents = list(map(int, input().split()))
+        tree = Tree(n, parents)
+    elif text == "F":
         filename = input()
         file_path = f"./text/{filename}"
         if "a" not in filename:
@@ -32,24 +43,17 @@ def main():
                 with open(file_path) as f:
                     n = int(f.readline())
                     parents = list(map(int, f.readline().split()))
-                    root, position = compute_height(n, parents)
-            except FileNotFoundError:
-                print(f"Error: file '{file_path}' not found")
-                return
+                    tree = Tree(n, parents)
             except Exception as e:
-                print(f"Error: {str(e)}")
+                print("Error:", str(e))
                 return
         else:
-            print("error: invalid filname")
+            print("Error: invalid filename")
             return
-    elif "I" in text:
-        n = int(input())
-        parents = list(map(int, input().split()))
-        root, position = compute_height(n, parents)
 
     sys.setrecursionlimit(10 ** 7)
     threading.stack_size(2 ** 27)
-    threading.Thread(target=lambda: print(max_height(root, position))).start()
+    threading.Thread(target=lambda: print(tree.max_height())).start()
 
 
 if __name__ == "__main__":
