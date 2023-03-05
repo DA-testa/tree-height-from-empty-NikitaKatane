@@ -27,6 +27,7 @@ def main():
     if "F" in text:
         filename = input()
         file_path = f'./text/' + filename
+        parents = list(map(int, f.readline().split()))
         if "a" not in filename:
             try:
                 with open(file_path) as f:
