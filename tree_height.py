@@ -26,15 +26,18 @@ def main():
     text = input("Enter I or F: ")
     if "F" in text:
         filename = input()
-        file_path = f'./text/' + filename
+        file_path = f"./text/{filename}"
         if "a" not in filename:
             try:
                 with open(file_path) as f:
                     n = int(f.readline())
                     parents = list(map(int, f.readline().split()))
                     root, position = compute_height(n, parents)
+            except FileNotFoundError:
+                print(f"Error: file '{file_path}' not found")
+                return
             except Exception as e:
-                print("Error:", str(e))
+                print(f"Error: {str(e)}")
                 return
         else:
             print("error: invalid filname")
@@ -46,7 +49,7 @@ def main():
 
     sys.setrecursionlimit(10 ** 7)
     threading.stack_size(2 ** 27)
-    threading.Thread(target=main: print(max_height(root, position))).start()
+    threading.Thread(target=lambda: print(max_height(root, position))).start()
 
 
 if __name__ == "__main__":
