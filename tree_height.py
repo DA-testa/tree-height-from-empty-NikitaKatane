@@ -1,31 +1,55 @@
 import sys
 import threading
-import numpy as np
+import numpy
 
 
-def compute_height(n, parents):
-    tree = [[] for _ in range(n)]
-    root = None
+def compute_height(n, vecaki) : 
+    sakne = None
+    position =[[]for_in range(n)]
     for i in range(n):
-        if parents[i] == -1:
-            root = i
+        if vecaki[i] == -1
+        sakne = i
         else:
-            tree[parents[i]].append(i)
+            position[vecaki[i]].append(i)
 
-    def compute_height_recursive(node):
-        if not tree[node]:
-            return 0
-        max_child_height = max([compute_height_recursive(child) for child in tree[node]])
-        return max_child_height + 1
 
-    return compute_height_recursive(root)
+
+def max_height(b):
+    if not position[b]:
+        return 1
+        else:
+            max_child_height = max(max_height(berni) for berni in position[b])
+            return max_child_height + 1
+return max_height(sakne)
+
+        
 
 
 def main():
-    n = int(input().strip())
-    parents = np.fromstring(input().strip(), dtype=int, sep=' ')
-    print(compute_height(n, parents)) 
+    text = input("Enter I or F: ")
+    if "F" in text:
+        filename = input()
+        file_path = f"./text/{filename}"
+        if "a" not in filename:
+            try:
+                with open(file_path) as f:
+                    n =int(f.readline())
+                    vecaki = list(map(int, f.readline().split()))
+            except Exception as e:
+                print("Error:",str(e))
+                return
+        else:
+            print("error: invalid filname")
+            return
+    elif "I" in text:
+        n = int(input())
+        vecaki = list(map(int,input().split()))
+
+  
 
 sys.setrecursionlimit(10**7)
 threading.stack_size(2**27)
-threading.Thread(target=main).start()
+threading.Thread(target=lambda: print(compute_height(n, vecaki))).start()
+
+if _name_ == "__main__":
+    main()
