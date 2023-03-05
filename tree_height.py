@@ -27,7 +27,6 @@ def main():
     if "F" in text:
         filename = input()
         file_path = f'./text/' + filename
-        parents = list(map(int, f.readline().split()))
         if "a" not in filename:
             try:
                 with open(file_path) as f:
@@ -47,7 +46,7 @@ def main():
 
     sys.setrecursionlimit(10 ** 7)
     threading.stack_size(2 ** 27)
-    threading.Thread(target=lambda: print(max_height(root, position))).start()
+    threading.Thread(target=main: print(max_height(root, position))).start()
 
 
 if __name__ == "__main__":
