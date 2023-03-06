@@ -1,60 +1,45 @@
 import sys
 import threading
 
+def compute_height(n, parents):
+    root = None 
+    position = [[] for _ in range(n)]
+    for i in range(n):
+        if parents[i] == -1:
+            root = i
+        else:
+            position[parents[i]].append(i)
+    return root, position
 
-class Node:
-    def __init__(self, value):
-        self.value = value
-        self.children = []
-
-
-class Tree:
-    def __init__(self, n, parents):
-        self.nodes = [Node(i) for i in range(n)]
-        for i in range(n):
-            parent = parents[i]
-            if parent == -1:
-                self.root = self.nodes[i]
-            else:
-                self.nodes[parent].children.append(self.nodes[i])
-
-    def max_height(self):
-        def dfs(node):
-            if not node.children:
-                return 1
-            else:
-                max_child_height = max(dfs(child) for child in node.children)
-                return max_child_height + 1
-
-        return dfs(self.root)
-
+def max_height(root, position):
+    height = 1 
+    if not position[root]:
+        return height
+    else:
+        for child in position[root]:
+            height = max(height, 1 + max_height(child, position))
+        return height
 
 def main():
     text = input("Enter I or F: ")
-    if text == "I":
+    if "I" in text:
         n = int(input())
         parents = list(map(int, input().split()))
-        tree = Tree(n, parents)
-    elif text == "F":
+        print(max_height(*compute_height(n, parents)))
+    elif "F" in text:
         filename = input()
-        file_path = f"./text/{filename}"
+        file = "./text/" + filename
         if "a" not in filename:
             try:
-                with open(file_path) as f:
+                with open(file) as f:
                     n = int(f.readline())
                     parents = list(map(int, f.readline().split()))
-                    tree = Tree(n, parents)
+                    print(max_height(*compute_height(n, parents)))
             except Exception as e:
                 print("Error:", str(e))
-                return
         else:
             print("Error: invalid filename")
-            return
 
-    sys.setrecursionlimit(10 ** 7)
-    threading.stack_size(2 ** 27)
-    threading.Thread(target=lambda: print(tree.max_height())).start()
-
-
-if __name__ == "__main__":
-    main()
+sys.setrecursionlimit(10 ** 7)
+threading.stack_size(2 ** 27)
+threading.Thread(target=main).start()
