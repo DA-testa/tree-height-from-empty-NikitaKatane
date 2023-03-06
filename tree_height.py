@@ -1,8 +1,10 @@
 import sys
 import threading
+import numpy
+
 
 def compute_height(n, parents):
-    root = None 
+    root = -1
     position = [[] for _ in range(n)]
     for i in range(n):
         if parents[i] == -1:
@@ -11,35 +13,41 @@ def compute_height(n, parents):
             position[parents[i]].append(i)
     return root, position
 
-def max_height(root, position):
-    height = 1 
-    if not position[root]:
-        return height
+
+def max_height(b, position):
+    if not position[b]:
+        return 1
     else:
-        for child in position[root]:
-            height = max(height, 1 + max_height(child, position))
-        return height
+        max_child_height = max(max_height(children, position) for children in position[b])
+        return max_child_height + 1
+
 
 def main():
     text = input("Enter I or F: ")
-    if "I" in text:
-        n = int(input())
-        parents = list(map(int, input().split()))
-        print(max_height(*compute_height(n, parents)))
-    elif "F" in text:
+    if "F" in text:
         filename = input()
-        file = "./text/" + filename
+        file_path = f"./text/{filename}"
         if "a" not in filename:
             try:
-                with open(file) as f:
+                with open(file_path) as f:
                     n = int(f.readline())
                     parents = list(map(int, f.readline().split()))
-                    print(max_height(*compute_height(n, parents)))
             except Exception as e:
                 print("Error:", str(e))
+                return
         else:
-            print("Error: invalid filename")
+            print("error: invalid filename")
+            return
+    elif "I" in text:
+        n = int(input())
+        parents = list(map(int, input().split()))
 
-sys.setrecursionlimit(10 ** 7)
-threading.stack_size(2 ** 27)
-threading.Thread(target=main).start()
+    root, position = compute_height(n, parents)
+
+    sys.setrecursionlimit(10**7)
+    threading.stack_size(2**27)
+    threading.Thread(target=lambda: print(max_height(root, position))).start()
+
+
+if __name__ == "__main__":
+    main()
